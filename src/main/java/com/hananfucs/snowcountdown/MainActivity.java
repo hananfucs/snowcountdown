@@ -18,6 +18,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -30,6 +31,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.XML;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -94,6 +96,43 @@ public class MainActivity extends AppCompatActivity {
         });
     // Add the request to the RequestQueue.
         queue.add(stringRequest);
+
+
+        String weatherUrl = "http://www.myweather2.com/developer/weather.ashx?uac=0kYvqQJ0lz&uref=55b71f79-cb35-4f19-9215-35e5a162f2f3";
+        StringRequest weatherStringRequest = new StringRequest(Request.Method.GET, weatherUrl,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        Log.d("HHH", "Weather Response is: "+ response);
+                        try {
+                            JSONObject weatherJson = XML.toJSONObject(response);
+                            displayData(weatherJson);
+                            Log.d("HHH", "JSON Weather Response is: "+ weatherJson);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("HHH", "That didn't work!");
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(weatherStringRequest);
+    }
+
+    private void displayData(JSONObject weatherJson) throws JSONException {
+        TextView lastSnowFall = (TextView) findViewById(R.id.lastSnowFallDate);
+        TextView bottomSnow = (TextView)findViewById(R.id.bottomSnowAmount);
+        TextView topSnow = (TextView)findViewById(R.id.topSnowAmount);
+
+        JSONObject weather = weatherJson.getJSONObject("weather");
+        JSONObject snowReport = weather.getJSONObject("snow_report");
+        lastSnowFall.setText(snowReport.getString("last_snow_date"));
+        bottomSnow.setText(snowReport.getString("lower_snow_depth") + " Cm");
+        topSnow.setText(snowReport.getString("upper_snow_depth") + " Cm");
     }
 
     private void responseToImages(String response) throws JSONException {
@@ -140,7 +179,8 @@ public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
      */
     protected void onPostExecute(Drawable image)
     {
-        animate(mImageView, image);
+//        animate(mImageView, image);
+        mImageView.setImageDrawable(image);
     }
 
 
@@ -151,6 +191,7 @@ public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
      */
     private Drawable downloadImage(String _url)
     {
+        Log.d("HHH", "X)X)X)X)X) Download image: " + _url);
         //Prepare to download image
         URL url;
         BufferedOutputStream out;
@@ -198,6 +239,7 @@ public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
         animation.addAnimation(fadeIn);
 
         imageView.setAnimation(animation);
+        imageView.setPadding(0,0,0,0);
         mImageDescription.setVisibility(View.VISIBLE);
     }
 
