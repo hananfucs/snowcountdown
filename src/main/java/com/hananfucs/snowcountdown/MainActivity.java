@@ -133,6 +133,97 @@ public class MainActivity extends AppCompatActivity {
         lastSnowFall.setText(snowReport.getString("last_snow_date"));
         bottomSnow.setText(snowReport.getString("lower_snow_depth") + " Cm");
         topSnow.setText(snowReport.getString("upper_snow_depth") + " Cm");
+
+        JSONArray forecast = weather.getJSONArray("forecast");
+        displayDayWeather(forecast.getJSONObject(0), (TextView)findViewById(R.id.tempToday), (ImageView) findViewById(R.id.todayIcon));
+        displayDayWeather(forecast.getJSONObject(1), (TextView)findViewById(R.id.tempTomorrow), (ImageView) findViewById(R.id.tomorowIcon));
+        displayDayWeather(forecast.getJSONObject(2), (TextView)findViewById(R.id.tempAfter), (ImageView) findViewById(R.id.afterIcon));
+        ((TextView)findViewById(R.id.textView13)).setText(forecast.getJSONObject(2).getString("date"));
+    }
+
+    private void displayDayWeather(JSONObject dayForecast, TextView tempDisplay, ImageView icon) throws JSONException {
+        int max =  dayForecast.getInt("day_max_temp");
+        int min = dayForecast.getInt("night_min_temp");
+        String tempDisplayString = max + "ºC - " +  min + "ºC";
+        tempDisplay.setText(tempDisplayString);
+        setIcon(icon, dayForecast.getJSONObject("day").getInt("weather_code"));
+    }
+
+    private void setIcon(ImageView icon, int weatherCode) {
+        switch(weatherCode) {
+            case 0 :
+                icon.setImageResource(R.drawable.Sunny);
+                break;
+            case 1:
+                icon.setImageResource(R.drawable.PartlyCloudyDay);
+                break;
+            case 2:
+                icon.setImageResource(R.drawable.Cloudy);
+                break;
+            case 3:
+                icon.setImageResource(R.drawable.Overcast);
+                break;
+            case 21:
+                icon.setImageResource(R.drawable.OccLightRain);
+                break;
+            case 22:
+                icon.setImageResource(R.drawable.IsoSleetSwrsDay);
+                break;
+            case 23:
+                icon.setImageResource(R.drawable.OccLightSleet);
+                break;
+            case 24:
+                icon.setImageResource(R.drawable.FreezingDrizzle);
+                break;
+            case 29:
+                icon.setImageResource(R.drawable.PartCloudRainThunderDay);
+                break;
+            case 38:
+                icon.setImageResource(R.drawable.ModSnow);
+                break;
+            case 39:
+                icon.setImageResource(R.drawable.Blizzard);
+                break;
+            case 45:
+                icon.setImageResource(R.drawable.Fog);
+                break;
+            case 49:
+                icon.setImageResource(R.drawable.FreezingFog);
+                break;
+            case 50:
+                icon.setImageResource(R.drawable.IsoRainSwrsDay);
+                break;
+            case 51:
+                icon.setImageResource(R.drawable.OccLightRain);
+                break;
+            case 56:
+            case 57:
+                icon.setImageResource(R.drawable.FreezingDrizzle);
+                break;
+            case 60:
+                icon.setImageResource(R.drawable.OccLightRain);
+                break;
+            case 61:
+                icon.setImageResource(R.drawable.ModRain);
+                break;
+            case 70:
+            case 71:
+                icon.setImageResource(R.drawable.OccLightSnow);
+                break;
+            case 72:
+            case 73:
+                icon.setImageResource(R.drawable.ModSnow);
+                break;
+            case 74:
+                icon.setImageResource(R.drawable.HeavySnowSwrsDay);
+                break;
+            case 75:
+                icon.setImageResource(R.drawable.HeavySnow);
+                break;
+            default:
+                icon.setImageResource(android.R.drawable.arrow_up_float);
+                break;
+        }
     }
 
     private void responseToImages(String response) throws JSONException {

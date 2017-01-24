@@ -10,7 +10,7 @@
     tools:context="com.hananfucs.snowcountdown.MainActivity">
 
     <ImageView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="251dp"
         app:srcCompat="@drawable/mayr"
         android:id="@+id/imageView"
@@ -166,4 +166,76 @@
         android:layout_marginLeft="8dp"
         app:layout_constraintTop_toTopOf="@+id/textView12"
         app:layout_constraintHorizontal_bias="0.66" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tempToday"
+        app:layout_constraintTop_toBottomOf="@+id/textView11"
+        android:layout_marginStart="32dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="32dp"
+        app:layout_constraintHorizontal_bias="0.04"
+        android:layout_marginTop="8dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tempTomorrow"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tempToday" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tempAfter"
+        android:layout_marginStart="48dp"
+        app:layout_constraintLeft_toRightOf="@+id/tempTomorrow"
+        android:layout_marginLeft="48dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tempTomorrow"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        app:layout_constraintHorizontal_bias="0.12" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/Blizzard"
+        android:id="@+id/todayIcon"
+        app:layout_constraintTop_toBottomOf="@+id/tempToday"
+        app:layout_constraintLeft_toLeftOf="@+id/tempToday"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/Blizzard"
+        android:id="@+id/tomorowIcon"
+        app:layout_constraintTop_toBottomOf="@+id/tempTomorrow"
+        app:layout_constraintLeft_toLeftOf="@+id/tempTomorrow"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/Clear"
+        android:id="@+id/afterIcon"
+        app:layout_constraintTop_toBottomOf="@+id/tempAfter"
+        app:layout_constraintLeft_toLeftOf="@+id/tempAfter"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp" />
 </android.support.constraint.ConstraintLayout>
