@@ -1,15 +1,23 @@
 package com.hananfucs.snowcountdown;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -39,16 +47,21 @@ import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 public class MainActivity extends AppCompatActivity {
 
     private ImageView mImageView;
+    private LinearLayout mImageDescription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mImageView = (ImageView) findViewById(R.id.imageView);
-        mImageView.setOnClickListener(new View.OnClickListener() {
+        mImageDescription = (LinearLayout)findViewById(R.id.imageDescriptionLayout);
+        mImageDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                request();
+                String url = "https://www.facebook.com/mayrhofen.hippach.zillertal/";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
             }
         });
         request();
@@ -112,11 +125,6 @@ public class MainActivity extends AppCompatActivity {
         new DownloadImage().execute(imageUrlsArray.get(rand));
     }
 
-    private void setImage(Drawable drawable)
-    {
-        mImageView.setImageDrawable(drawable);
-    }
-
 
 public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
 
@@ -132,7 +140,7 @@ public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
      */
     protected void onPostExecute(Drawable image)
     {
-        setImage(image);
+        animate(mImageView, image);
     }
 
 
@@ -153,25 +161,6 @@ public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
         try {
             url = new URL(_url);
             in = url.openStream();
-
-            /*
-             * THIS IS NOT NEEDED
-             *
-             * YOU TRY TO CREATE AN ACTUAL IMAGE HERE, BY WRITING
-             * TO A NEW FILE
-             * YOU ONLY NEED TO READ THE INPUTSTREAM
-             * AND CONVERT THAT TO A BITMAP
-            out = new BufferedOutputStream(new FileOutputStream("testImage.jpg"));
-            int i;
-
-             while ((i = in.read()) != -1) {
-                 out.write(i);
-             }
-             out.close();
-             in.close();
-             */
-
-            // Read the inputstream
             buf = new BufferedInputStream(in);
 
             // Convert the BufferedInputStream to a Bitmap
@@ -193,5 +182,23 @@ public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
     }
 
 }
+
+//    private void animate(final ImageView imageView, final int images[], final int imageIndex, final boolean forever) {
+    private void animate(final ImageView imageView, Drawable imageToPut) {
+        int fadeInDuration = 1000; // Configure time values here
+
+        imageView.setVisibility(View.VISIBLE);    //Visible or invisible by default - this will apply when the animation ends
+        imageView.setImageDrawable(imageToPut);
+
+        Animation fadeIn = new AlphaAnimation(0, 1);
+        fadeIn.setInterpolator(new DecelerateInterpolator()); // add this
+        fadeIn.setDuration(fadeInDuration);
+
+        AnimationSet animation = new AnimationSet(false); // change to false
+        animation.addAnimation(fadeIn);
+
+        imageView.setAnimation(animation);
+        mImageDescription.setVisibility(View.VISIBLE);
+    }
 
 }
