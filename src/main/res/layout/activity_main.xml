@@ -209,7 +209,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/Blizzard"
+        app:srcCompat="@drawable/blizzard"
         android:id="@+id/todayIcon"
         app:layout_constraintTop_toBottomOf="@+id/tempToday"
         app:layout_constraintLeft_toLeftOf="@+id/tempToday"
@@ -220,7 +220,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/Blizzard"
+        app:srcCompat="@drawable/blizzard"
         android:id="@+id/tomorowIcon"
         app:layout_constraintTop_toBottomOf="@+id/tempTomorrow"
         app:layout_constraintLeft_toLeftOf="@+id/tempTomorrow"
@@ -231,7 +231,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/Clear"
+        app:srcCompat="@drawable/clear"
         android:id="@+id/afterIcon"
         app:layout_constraintTop_toBottomOf="@+id/tempAfter"
         app:layout_constraintLeft_toLeftOf="@+id/tempAfter"

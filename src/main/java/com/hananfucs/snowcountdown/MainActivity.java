@@ -152,73 +152,73 @@ public class MainActivity extends AppCompatActivity {
     private void setIcon(ImageView icon, int weatherCode) {
         switch(weatherCode) {
             case 0 :
-                icon.setImageResource(R.drawable.Sunny);
+                icon.setImageResource(R.drawable.sunny);
                 break;
             case 1:
-                icon.setImageResource(R.drawable.PartlyCloudyDay);
+                icon.setImageResource(R.drawable.partlycloudyday);
                 break;
             case 2:
-                icon.setImageResource(R.drawable.Cloudy);
+                icon.setImageResource(R.drawable.cloudy);
                 break;
             case 3:
-                icon.setImageResource(R.drawable.Overcast);
+                icon.setImageResource(R.drawable.overcast);
                 break;
             case 21:
-                icon.setImageResource(R.drawable.OccLightRain);
+                icon.setImageResource(R.drawable.occlightrain);
                 break;
             case 22:
-                icon.setImageResource(R.drawable.IsoSleetSwrsDay);
+                icon.setImageResource(R.drawable.isosleetswrsday);
                 break;
             case 23:
-                icon.setImageResource(R.drawable.OccLightSleet);
+                icon.setImageResource(R.drawable.occlightsleet);
                 break;
             case 24:
-                icon.setImageResource(R.drawable.FreezingDrizzle);
+                icon.setImageResource(R.drawable.freezingdrizzle);
                 break;
             case 29:
-                icon.setImageResource(R.drawable.PartCloudRainThunderDay);
+                icon.setImageResource(R.drawable.partcloudrainthunderday);
                 break;
             case 38:
-                icon.setImageResource(R.drawable.ModSnow);
+                icon.setImageResource(R.drawable.modsnow);
                 break;
             case 39:
-                icon.setImageResource(R.drawable.Blizzard);
+                icon.setImageResource(R.drawable.blizzard);
                 break;
             case 45:
-                icon.setImageResource(R.drawable.Fog);
+                icon.setImageResource(R.drawable.fog);
                 break;
             case 49:
-                icon.setImageResource(R.drawable.FreezingFog);
+                icon.setImageResource(R.drawable.freezingfog);
                 break;
             case 50:
-                icon.setImageResource(R.drawable.IsoRainSwrsDay);
+                icon.setImageResource(R.drawable.isorainswrsday);
                 break;
             case 51:
-                icon.setImageResource(R.drawable.OccLightRain);
+                icon.setImageResource(R.drawable.occlightrain);
                 break;
             case 56:
             case 57:
-                icon.setImageResource(R.drawable.FreezingDrizzle);
+                icon.setImageResource(R.drawable.freezingdrizzle);
                 break;
             case 60:
-                icon.setImageResource(R.drawable.OccLightRain);
+                icon.setImageResource(R.drawable.occlightrain);
                 break;
             case 61:
-                icon.setImageResource(R.drawable.ModRain);
+                icon.setImageResource(R.drawable.modrain);
                 break;
             case 70:
             case 71:
-                icon.setImageResource(R.drawable.OccLightSnow);
+                icon.setImageResource(R.drawable.occlightsnow);
                 break;
             case 72:
             case 73:
-                icon.setImageResource(R.drawable.ModSnow);
+                icon.setImageResource(R.drawable.modsnow);
                 break;
             case 74:
-                icon.setImageResource(R.drawable.HeavySnowSwrsDay);
+                icon.setImageResource(R.drawable.heavysnowswrsday);
                 break;
             case 75:
-                icon.setImageResource(R.drawable.HeavySnow);
+                icon.setImageResource(R.drawable.heavysnow);
                 break;
             default:
                 icon.setImageResource(android.R.drawable.arrow_up_float);
