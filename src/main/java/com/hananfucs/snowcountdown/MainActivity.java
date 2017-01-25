@@ -7,6 +7,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,6 +53,14 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView mImageView;
     private LinearLayout mImageDescription;
+    private TextView mCountDownTextView;
+    private Handler countdownHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            String message = (String) msg.obj;
+            mCountDownTextView.setText(message);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +77,62 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+        TextView weatherLink = (TextView) findViewById(R.id.weatherLink);
+        weatherLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "http://www.myweather2.com";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
+        mCountDownTextView = (TextView) findViewById(R.id.countdownText);
+        startCountdownThread();
         request();
+    }
+
+    private void startCountdownThread() {
+        Thread th = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true) {
+
+                    long flightTimeMillis = WidgetProvider.flightDate.getTime();
+                    long timeUntilMillis = flightTimeMillis - System.currentTimeMillis();
+                    long tempNum;
+
+                    int weeksLeft = (int) (timeUntilMillis / WidgetProvider.WEEK);
+                    tempNum = timeUntilMillis % WidgetProvider.WEEK;
+                    int daysLeft = (int) (tempNum / WidgetProvider.DAY);
+                    tempNum = tempNum % WidgetProvider.DAY;
+                    int hoursLeft = (int) (tempNum / WidgetProvider.HOUR);
+                    tempNum = tempNum % WidgetProvider.HOUR;
+                    int minutesLeft = (int) (tempNum / WidgetProvider.MINUTE);
+                    tempNum = tempNum % WidgetProvider.MINUTE;
+                    int secondsLeft = (int) (tempNum / WidgetProvider.SECOND);
+
+                    String weekString = weeksLeft == 1 ? "Week" : "Weeks";
+                    String daysString = daysLeft == 1 ? "Day" : "Days";
+                    String hoursString = hoursLeft == 1 ? "Hour" : "Hours";
+                    String minutesString = minutesLeft == 1 ? "Minute" : "Minutes";
+                    String secondsString = secondsLeft == 1 ? "Second" : "Seconds";
+
+                    String message = weeksLeft + " " + weekString + ", " + daysLeft + " " + daysString + ", " + hoursLeft+ " " + hoursString + ", " +
+                            minutesLeft + " " + minutesString + ", " + secondsLeft + " " + secondsString + " left until the flight!";
+
+                    Message messageToSend = Message.obtain();
+                    messageToSend.obj = message;
+                    countdownHandler.sendMessage(messageToSend);
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+        th.start();
     }
 
     private void request(){
@@ -138,13 +204,19 @@ public class MainActivity extends AppCompatActivity {
         displayDayWeather(forecast.getJSONObject(0), (TextView)findViewById(R.id.tempToday), (ImageView) findViewById(R.id.todayIcon));
         displayDayWeather(forecast.getJSONObject(1), (TextView)findViewById(R.id.tempTomorrow), (ImageView) findViewById(R.id.tomorowIcon));
         displayDayWeather(forecast.getJSONObject(2), (TextView)findViewById(R.id.tempAfter), (ImageView) findViewById(R.id.afterIcon));
-        ((TextView)findViewById(R.id.textView13)).setText(forecast.getJSONObject(2).getString("date"));
+        displayThirdDate(forecast.getJSONObject(2).getString("date"));
+    }
+
+    private void displayThirdDate(String date) {
+        String[] dateParts = date.split("-");
+        String newDate = dateParts[2] + "-" + dateParts[1] + "-" + dateParts[0];
+        ((TextView)findViewById(R.id.textView13)).setText(newDate);
     }
 
     private void displayDayWeather(JSONObject dayForecast, TextView tempDisplay, ImageView icon) throws JSONException {
         int max =  dayForecast.getInt("day_max_temp");
         int min = dayForecast.getInt("night_min_temp");
-        String tempDisplayString = max + "ºC - " +  min + "ºC";
+        String tempDisplayString = max + "ºC / " +  min + "ºC";
         tempDisplay.setText(tempDisplayString);
         setIcon(icon, dayForecast.getJSONObject("day").getInt("weather_code"));
     }
@@ -270,8 +342,8 @@ public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
      */
     protected void onPostExecute(Drawable image)
     {
-//        animate(mImageView, image);
-        mImageView.setImageDrawable(image);
+        animate(mImageView, image);
+//        mImageView.setImageDrawable(image);
     }
 
 
@@ -332,6 +404,11 @@ public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
         imageView.setAnimation(animation);
         imageView.setPadding(0,0,0,0);
         mImageDescription.setVisibility(View.VISIBLE);
+
+        ImageView myImageView= (ImageView)findViewById(R.id.logo);
+        Animation myFadeInAnimation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+        myImageView.setVisibility(View.VISIBLE);
+        myImageView.startAnimation(myFadeInAnimation);
     }
 
 }

@@ -6,5 +6,5 @@
     android:initialLayout="@layout/widget_layout"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen|keyguard"
-    android:previewImage="@android:drawable/alert_dark_frame">
+    android:previewImage="@drawable/snowflake">
 </appwidget-provider>

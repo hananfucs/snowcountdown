@@ -17,13 +17,14 @@ import java.util.Random;
  */
 
 public class WidgetProvider extends AppWidgetProvider {
-    private static final long MINUTE = 60*1000;
-    private static final long HOUR = MINUTE*60;
-    private static final long DAY = HOUR*24;
-    private static final long WEEK = DAY*7;
+    public static final long SECOND = 1000;
+    public static final long MINUTE = SECOND*60;
+    public static final long HOUR = MINUTE*60;
+    public static final long DAY = HOUR*24;
+    public static final long WEEK = DAY*7;
 
 
-    private Date flightDate = new Date(117, 2, 18, 7, 45);
+    public static Date flightDate = new Date(117, 2, 18, 7, 45);
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
@@ -58,7 +59,10 @@ public class WidgetProvider extends AppWidgetProvider {
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
 
-        return PendingIntent.getActivity(cn, 232, i, 0);
+        Intent intent = new Intent(cn, MainActivity.class);
+
+
+        return PendingIntent.getActivity(cn, 232, intent, 0);
     }
 
 
