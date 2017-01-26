@@ -22,34 +22,13 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.XML;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Iterator;
 
-import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
-
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NetworkActions.NetworkActionsResponsListener {
 
     private ImageView mImageView;
     private LinearLayout mImageDescription;
@@ -66,6 +45,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initUi();
+        NetworkActions networkActions = new NetworkActions(this);
+        networkActions.getImage(this);
+        networkActions.getWeather(this);
+    }
+
+    private void initUi() {
         mImageView = (ImageView) findViewById(R.id.imageView);
         mImageDescription = (LinearLayout)findViewById(R.id.imageDescriptionLayout);
         mImageDescription.setOnClickListener(new View.OnClickListener() {
@@ -89,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
         });
         mCountDownTextView = (TextView) findViewById(R.id.countdownText);
         startCountdownThread();
-        request();
     }
 
     private void startCountdownThread() {
@@ -135,61 +120,7 @@ public class MainActivity extends AppCompatActivity {
         th.start();
     }
 
-    private void request(){
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-//        String url = "https://graph.facebook.com/v2.8/1452917798070567/photos?fields=images&access_token=1313945542000302%7Cr6VnCef8WKT35gTeTPEnb7o-2is";
-        String url = "https://graph.facebook.com/v2.8/119544414445/photos?fields=images&access_token=1313945542000302%7Cr6VnCef8WKT35gTeTPEnb7o-2is";
-
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        Log.d("HHH", "Response is: "+ response);
-                        try {
-                            responseToImages(response);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("HHH", "That didn't work!");
-            }
-        });
-    // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-
-
-        String weatherUrl = "http://www.myweather2.com/developer/weather.ashx?uac=0kYvqQJ0lz&uref=55b71f79-cb35-4f19-9215-35e5a162f2f3";
-        StringRequest weatherStringRequest = new StringRequest(Request.Method.GET, weatherUrl,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        Log.d("HHH", "Weather Response is: "+ response);
-                        try {
-                            JSONObject weatherJson = XML.toJSONObject(response);
-                            displayData(weatherJson);
-                            Log.d("HHH", "JSON Weather Response is: "+ weatherJson);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("HHH", "That didn't work!");
-            }
-        });
-        // Add the request to the RequestQueue.
-        queue.add(weatherStringRequest);
-    }
-
-    private void displayData(JSONObject weatherJson) throws JSONException {
+    private void displayWeather(JSONObject weatherJson) throws JSONException {
         TextView lastSnowFall = (TextView) findViewById(R.id.lastSnowFallDate);
         TextView bottomSnow = (TextView)findViewById(R.id.bottomSnowAmount);
         TextView topSnow = (TextView)findViewById(R.id.topSnowAmount);
@@ -298,95 +229,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void responseToImages(String response) throws JSONException {
-        JSONObject big = new JSONObject(response);
-        JSONArray dataArray = big.getJSONArray("data");
-        JSONObject imagesUrls = new JSONObject();
-        ArrayList<String> imageUrlsArray = new ArrayList<>();
-        for (int i = 0; i < dataArray.length(); i++) {
-            JSONObject dat = dataArray.getJSONObject(i);
-            imagesUrls.put(dat.getString("id"), ((JSONObject)dat.getJSONArray("images").get(0)).getString("source").replace("\\", ""));
-            imageUrlsArray.add(((JSONObject)dat.getJSONArray("images").get(0)).getString("source").replace("\\", ""));
-        }
-
-        Log.d("HHH", imagesUrls.toString());
-
-
-//        Iterator<String> iter = imagesUrls.keys();
-//        while (iter.hasNext()) {
-//            String key = iter.next();
-//            try {
-//                Object value = imagesUrls.get(key);
-//            } catch (JSONException e) {
-//                // Something went wrong!
-//            }
-//        }
-        int numOfItems = imageUrlsArray.size();
-        int rand = (int) (System.currentTimeMillis()%numOfItems);
-        Log.d("HHH", "numOfItems: " + numOfItems + " rand: " + rand);
-        new DownloadImage().execute(imageUrlsArray.get(rand));
-    }
-
-
-public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
-
-    @Override
-    protected Drawable doInBackground(String... arg0) {
-        // This is done in a background thread
-        return downloadImage(arg0[0]);
-    }
-
-    /**
-     * Called after the image has been downloaded
-     * -> this calls a function on the main thread again
-     */
-    protected void onPostExecute(Drawable image)
-    {
-        animate(mImageView, image);
-//        mImageView.setImageDrawable(image);
-    }
-
-
-    /**
-     * Actually download the Image from the _url
-     * @param _url
-     * @return
-     */
-    private Drawable downloadImage(String _url)
-    {
-        Log.d("HHH", "X)X)X)X)X) Download image: " + _url);
-        //Prepare to download image
-        URL url;
-        BufferedOutputStream out;
-        InputStream in;
-        BufferedInputStream buf;
-
-        //BufferedInputStream buf;
-        try {
-            url = new URL(_url);
-            in = url.openStream();
-            buf = new BufferedInputStream(in);
-
-            // Convert the BufferedInputStream to a Bitmap
-            Bitmap bMap = BitmapFactory.decodeStream(buf);
-            if (in != null) {
-                in.close();
-            }
-            if (buf != null) {
-                buf.close();
-            }
-
-            return new BitmapDrawable(bMap);
-
-        } catch (Exception e) {
-            Log.e("Error reading file", e.toString());
-        }
-
-        return null;
-    }
-
-}
-
 //    private void animate(final ImageView imageView, final int images[], final int imageIndex, final boolean forever) {
     private void animate(final ImageView imageView, Drawable imageToPut) {
         int fadeInDuration = 1000; // Configure time values here
@@ -411,4 +253,16 @@ public class DownloadImage extends AsyncTask<String, Integer, Drawable> {
         myImageView.startAnimation(myFadeInAnimation);
     }
 
+    @Override
+    public void onActionComplete(Object response) {
+        if (response instanceof Drawable) {
+            animate(mImageView, (Drawable) response);
+        } else if (response instanceof JSONObject) {
+            try {
+                displayWeather((JSONObject) response);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
