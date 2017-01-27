@@ -66,7 +66,6 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:text="asdasdasd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/lastSnowFallDate"
@@ -85,7 +84,6 @@
         app:layout_constraintTop_toBottomOf="@+id/lastSnowFall" />
 
     <TextView
-        android:text="asdasdasd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/bottomSnowAmount"
@@ -104,7 +102,6 @@
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:text="asdasdasd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/topSnowAmount"
@@ -177,7 +174,6 @@
         app:layout_constraintHorizontal_bias="0.66" />
 
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tempToday"
@@ -189,7 +185,6 @@
         android:layout_marginTop="8dp" />
 
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tempTomorrow"
@@ -202,7 +197,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/tempToday" />
 
     <TextView
-        android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tempAfter"
@@ -284,6 +278,21 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:textSize="20sp"
+        android:text="Last Year's Memories"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lastYear"
+        app:layout_constraintTop_toBottomOf="@+id/weatherLink"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="24dp" />
 
 </android.support.constraint.ConstraintLayout>
 </ScrollView>

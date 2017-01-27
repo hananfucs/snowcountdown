@@ -1,24 +1,19 @@
 package com.hananfucs.snowcountdown;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements NetworkActions.Ne
     private ImageView mImageView;
     private LinearLayout mImageDescription;
     private TextView mCountDownTextView;
+    NetworkActions networkActions;
     private Handler countdownHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -46,35 +42,35 @@ public class MainActivity extends AppCompatActivity implements NetworkActions.Ne
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initUi();
-        NetworkActions networkActions = new NetworkActions(this);
+        networkActions = new NetworkActions(this);
         networkActions.getImage(this);
         networkActions.getWeather(this);
     }
 
     private void initUi() {
         mImageView = (ImageView) findViewById(R.id.imageView);
+        mImageView.setOnClickListener(setOpenUrlCLickListener("https://webtv.feratel.com/webtv/?cam=5635&design=v3&c0=0&c2=0&lg=en&pg=7A0FBF2F-DA9D-45FA-B6D9-FAE2DD0BD516&s=0"));
         mImageDescription = (LinearLayout)findViewById(R.id.imageDescriptionLayout);
-        mImageDescription.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = "https://www.facebook.com/mayrhofen.hippach.zillertal/";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            }
-        });
+        mImageDescription.setOnClickListener(setOpenUrlCLickListener("https://www.facebook.com/mayrhofen.hippach.zillertal/"));
         TextView weatherLink = (TextView) findViewById(R.id.weatherLink);
-        weatherLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String url = "http://www.myweather2.com";
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-            }
-        });
+        weatherLink.setOnClickListener(setOpenUrlCLickListener("http://www.myweather2.com"));
+        ImageView logo = (ImageView)findViewById(R.id.logo);
+        logo.setOnClickListener(setOpenUrlCLickListener("http://www.snow-forecast.com/resorts/Mayrhofen/6day/mid"));
+        TextView lastYear = (TextView) findViewById(R.id.lastYear);
+        lastYear.setOnClickListener(setOpenUrlCLickListener("https://vimeo.com/156498850"));
         mCountDownTextView = (TextView) findViewById(R.id.countdownText);
         startCountdownThread();
+    }
+
+    private View.OnClickListener setOpenUrlCLickListener(final String url) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        };
     }
 
     private void startCountdownThread() {
